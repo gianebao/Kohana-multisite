@@ -81,18 +81,18 @@ else
 		</tr>
 		<tr>
 			<th>Cache Directory</th>
-			<?php if (is_dir(APPPATH) AND is_dir(APPPATH.'cache') AND is_writable(APPPATH.'cache')): ?>
-				<td class="pass"><?php echo APPPATH.'cache/' ?></td>
+			<?php if (is_dir(APP_TMP) AND is_dir(APP_TMP . DIRECTORY_SEPARATOR . 'cache') AND is_writable(APP_TMP . DIRECTORY_SEPARATOR . 'cache')): ?>
+				<td class="pass"><?php echo APP_TMP . DIRECTORY_SEPARATOR . 'cache/' ?></td>
 			<?php else: $failed = TRUE ?>
-				<td class="fail">The <code><?php echo APPPATH.'cache/' ?></code> directory is not writable.</td>
+				<td class="fail">The <code><?php echo APP_TMP . DIRECTORY_SEPARATOR . 'cache/' ?></code> directory is not writable.</td>
 			<?php endif ?>
 		</tr>
 		<tr>
 			<th>Logs Directory</th>
-			<?php if (is_dir(APPPATH) AND is_dir(APPPATH.'logs') AND is_writable(APPPATH.'logs')): ?>
-				<td class="pass"><?php echo APPPATH.'logs/' ?></td>
+			<?php if (is_dir(APP_TMP) AND is_dir(APP_TMP . DIRECTORY_SEPARATOR . 'logs') AND is_writable(APP_TMP . DIRECTORY_SEPARATOR .'logs')): ?>
+				<td class="pass"><?php echo APP_TMP . DIRECTORY_SEPARATOR . 'logs/' ?></td>
 			<?php else: $failed = TRUE ?>
-				<td class="fail">The <code><?php echo APPPATH.'logs/' ?></code> directory is not writable.</td>
+				<td class="fail">The <code><?php echo APP_TMP . DIRECTORY_SEPARATOR . 'logs/' ?></code> directory is not writable.</td>
 			<?php endif ?>
 		</tr>
 		<tr>

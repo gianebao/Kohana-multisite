@@ -5,8 +5,12 @@
  * The application directory must contain the bootstrap.php file.
  *
  * @see  http://kohanaframework.org/guide/about.install#application
+ * 
+ * Updated: Application depends on the domain name/server_name.
  */
-$application = '../application';
+
+define('SERVER_NAME', $_SERVER['SERVER_NAME']);
+$application = '../apps/' . SERVER_NAME;
 
 /**
  * The directory in which your modules are located.
@@ -22,6 +26,13 @@ $modules = '../modules';
  * @see  http://kohanaframework.org/guide/about.install#system
  */
 $system = '../system';
+
+/**
+ * The directory in which the logs and caches created by the application are located.
+ * This must be manually set to writable.
+ *
+ */
+$tmp = '../tmp';
 
 /**
  * The default extension of resource files. If you change this, all resources
@@ -68,19 +79,27 @@ if ( ! is_dir($modules) AND is_dir(DOCROOT.$modules))
 if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
 	$system = DOCROOT.$system;
 
+// Make the temporary folder relative to the docroot, for symlink'd index.php
+if ( ! is_dir($tmp) AND is_dir(DOCROOT.$tmp))
+	$tmp = DOCROOT.$tmp;
+
+
 // Define the absolute paths for configured directories
 define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
+define('TMPPATH', realpath($tmp).DIRECTORY_SEPARATOR);
 define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
 
 // Clean up the configuration vars
 unset($application, $modules, $system);
 
-if (file_exists('install'.EXT))
-{
-	// Load the installation check
-	return include 'install'.EXT;
-}
+/**
+ * if (file_exists('install'.EXT))
+ * {
+ *  // Load the installation check
+ *  return include 'install'.EXT;
+ * }
+ */
 
 /**
  * Define the start time of the application, used for profiling.

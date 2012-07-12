@@ -67,6 +67,11 @@ if (isset($_SERVER['KOHANA_ENV']))
 }
 
 /**
+ * Application temporary folder location.
+ **/
+define('APP_TMP', TMPPATH . SERVER_NAME);
+
+/**
  * Initialize Kohana, setting the default options.
  *
  * The following options are available:
@@ -81,12 +86,13 @@ if (isset($_SERVER['KOHANA_ENV']))
  */
 Kohana::init(array(
 	'base_url'   => '/',
+    'cache_dir'  => APP_TMP . DIRECTORY_SEPARATOR . 'cache'
 ));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
-Kohana::$log->attach(new Log_File(APPPATH.'logs'));
+Kohana::$log->attach(new Log_File(APP_TMP . DIRECTORY_SEPARATOR . 'logs'));
 
 /**
  * Attach a file reader to config. Multiple readers are supported.
@@ -113,6 +119,6 @@ Kohana::modules(array(
  */
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
-		'controller' => 'welcome',
+		'controller' => 'demo',
 		'action'     => 'index',
 	));

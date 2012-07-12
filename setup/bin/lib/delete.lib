@@ -1,0 +1,90 @@
+<?php
+$options = array('--all', '--app', '--cache');
+
+if (empty($ARGS[2]))
+{
+    _verbose("[option] must be specified.\n\n");
+    _help('delete');
+}
+
+$option = $ARGS[2];
+
+if (!in_array($option, $options))
+{
+    _verbose("Unsupported option.\n\n");
+    _help('delete');
+}
+
+if (empty($ARGS[3]))
+{
+    _verbose("You must specify an application name.\n\n");
+    _help('delete');
+}
+
+$name = preg_replace('/\.+/', '.', rtrim(strtolower($ARGS[3]), '.'));
+
+$match = preg_match('/^[a-z0-9][a-z0-9\.\-]*\.[a-z0-9]+$/i', $name);
+
+if (empty($match))
+{
+    _verbose("You must specify a valid domain name for the application name.\n");
+    exit("\n");
+}
+
+if (0 === strpos($name, 'www.'))
+{
+    _verbose("Indicating 'www.' is not required for your application name.\n");
+    exit("\n");
+}
+
+$destination_path = APP_PATH . DS . $name;
+
+if (!is_dir($destination_path))
+{
+    _verbose("'${name}' does not exist.\n");
+    exit("\n");
+}
+
+function rm_dir($dir)
+{
+    foreach(glob($dir . '/*') as $file)
+    {
+        if(is_dir($file))
+        {
+            rm_dir($file);
+        }
+        else
+        {
+            unlink($file);
+        }
+    }
+    
+    rmdir($dir);
+}
+
+$log_path = TMP_PATH . DS . $name;
+
+switch($option)
+{
+    case '--cache':
+        if (is_dir($log_path . DS . 'cache'))
+        {
+            rm_dir($log_path . DS . 'cache');
+        }
+        
+        break;
+
+    case '--all':
+        if (is_dir($log_path))
+        {
+            rm_dir($log_path);
+        }
+
+    case '--app':
+        if (is_dir($destination_path))
+        {
+            rm_dir($destination_path);
+        }
+        break;
+
+}

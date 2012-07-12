@@ -1,0 +1,98 @@
+<?php
+function write_ini_file($array, $file)
+{
+    $res = array();
+    foreach($array as $key => $val)
+    {
+        if(is_array($val))
+        {
+            $res[] = "[$key]";
+            foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
+        }
+        else $res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
+    }
+    safefilerewrite($file, implode("\r\n", $res));
+}
+
+function safefilerewrite($fileName, $dataToSave)
+{    if ($fp = fopen($fileName, 'w'))
+    {
+        $startTime = microtime();
+        do
+        {            $canWrite = flock($fp, LOCK_EX);
+           // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
+           if(!$canWrite) usleep(round(rand(0, 100)*1000));
+        } while ((!$canWrite)and((microtime()-$startTime) < 1000));
+
+        //file was locked so now we can store information
+        if ($canWrite)
+        {            fwrite($fp, $dataToSave);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
+
+}
+
+if (file_exists(CONFIG))
+{
+    $config = parse_ini_file(CONFIG);
+}
+
+if (empty($config))
+{
+    $config = array();
+}
+
+if (empty($ARGS[2]))
+{
+    _verbose("You must specify a configuration name.\n");
+    _help('config');
+}
+
+$name = strtolower($ARGS[2]);
+
+if (empty($ARGS[3]))
+{
+    _verbose("You must specify a value for '${name}'.\n");
+    _help('config');
+}
+
+$value = $ARGS[3];
+
+function path_to_full($name, $value)
+{
+    if ('path' !== $name)
+    {
+        return $value;
+    }
+    
+    $path = realpath($value);
+    
+    if (!is_dir($path))
+    {
+        _verbose("'${value}' is not a valid directory.");
+        exit("\n");
+    }
+    
+    return $path;
+}
+
+function dot_array($key, $value)
+{
+    if (false === ($pos = strpos($key, '.')))
+    {
+        return array($key => path_to_full($key, $value));
+    }
+    
+    $index = substr($key, 0, $pos);
+    $key = substr($key, $pos + 1);
+    
+    return array($index => dot_array($key, $value));
+}
+
+preg_replace('/\.+/', '.', trim(strtolower($name), '.'));
+
+$config = array_merge($config, dot_array($name, $value));
+
+write_ini_file($config, CONFIG);

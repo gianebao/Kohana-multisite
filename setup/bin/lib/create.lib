@@ -1,0 +1,117 @@
+<?php
+$source_path = SETUP_PATH . DS . 'app';
+
+if (empty($ARGS[2]))
+{
+    _verbose("You must specify an application name.\n\n");
+    _help('create');
+}
+
+$name = preg_replace('/\.+/', '.', rtrim(strtolower($ARGS[2]), '.'));
+
+$match = preg_match('/^[a-z0-9][a-z0-9\.\-]*\.[a-z0-9]+$/i', $name);
+_verbose("Creating application '${name}' ...");
+
+if (empty($match))
+{
+    _verbose("You must specify a valid domain name for the application name.\n");
+    exit("\n");
+}
+
+if (0 === strpos($name, 'www.'))
+{
+    _verbose("Indicating 'www.' is not required for your application name.\n");
+    exit("\n");
+}
+
+$destination_path = APP_PATH . DS . $name;
+
+if (is_dir($destination_path))
+{
+    _verbose("'${name}' already exist.\n");
+    exit("\n");
+}
+
+$source = empty($ARGS[3]) ? 'default': strtolower($ARGS[3]);
+$source_path = $source_path . DS . $source;
+
+if (!is_dir($source_path))
+{
+    _verbose("'${source}' is not a valid application template.\n");
+    _help('create');
+}
+
+function copy_r($path, $dest)
+{
+    if (is_dir($path))
+    {
+        mkdir($dest);
+        
+        $objects = scandir($path);
+        if (sizeof($objects) > 0)
+        {
+            foreach ($objects as $file)
+            {
+                if ($file == '.' || $file == '..')
+                {
+                    continue;
+                }
+                
+                // go on
+                if (is_dir($path . DS . $file))
+                {
+                    copy_r($path.DS.$file, $dest.DS.$file);
+                }
+                else
+                {
+                    copy($path.DS.$file, $dest.DS.$file);
+                }
+            }
+        }
+        return true;
+    }
+    elseif (is_file($path))
+    {
+        return copy($path, $dest);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function rm_dir($dir)
+{
+    foreach(glob($dir . '/*') as $file)
+    {
+        if(is_dir($file))
+        {
+            rm_dir($file);
+        }
+        else
+        {
+            unlink($file);
+        }
+    }
+    
+    rmdir($dir);
+}
+
+if (copy_r($source_path, $destination_path))
+{
+    if (is_dir(TMP_PATH . DS . $name . DS . 'logs') || mkdir(TMP_PATH . DS . $name . DS . 'logs', 0755, true))
+    {
+        _verbose('Success!');
+    }
+    else
+    {
+        rm_dir($destination_path);
+        _verbose('Failed!');
+    }
+}
+else
+{
+    _verbose('Failed!');
+}
+
+

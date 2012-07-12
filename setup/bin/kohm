@@ -1,0 +1,64 @@
+#!/usr/bin/php -q
+<?php
+define('DS', DIRECTORY_SEPARATOR);
+define('BIN_PATH', dirname(__FILE__));
+define('SETUP_PATH', dirname(BIN_PATH));
+define('LIB_PATH', BIN_PATH . DS . 'lib');
+define('CONFIG_PATH', BIN_PATH . DS . 'conf');
+define('CONFIG', CONFIG_PATH . DS . 'kohm.ini');
+
+require CONFIG_PATH . DS . 'help.php';
+
+function _verbose($msg)
+{
+    echo "kohm: ${msg}\n";
+}
+
+if (file_exists(CONFIG))
+{
+    try
+    {
+        $config = parse_ini_file(CONFIG);
+    }
+    catch (Exception $e)
+    {
+        $config = array();
+    }
+}
+
+if (empty($config))
+{
+    $config = array();
+}
+
+$root = dirname(SETUP_PATH);
+
+define('APP_PATH', !empty($config['apps']['path']) ? $config['apps']['path']: $root . DS . 'apps');
+define('TMP_PATH', !empty($config['tmp']['path']) ? $config['tmp']['path']: $root . DS . 'tmp');
+
+if (!is_dir(APP_PATH))
+{
+    _verbose("Failed to locate `apps` folder.\nManually configure by using 'kohm config app <APPS_DIRECTORY>'.");
+    exit("\n");
+}
+
+if (!is_dir(TMP_PATH))
+{
+    _verbose("Failed to locate `tmp` folder.\nManually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
+    exit("\n");
+}
+
+$ARGS = $argv;
+
+$lib = empty($ARGS) || empty($ARGS[1])? 'help': strtolower($ARGS[1]);
+$lib_path = LIB_PATH . DS . $lib . '.lib';
+
+if (file_exists($lib_path))
+{
+    include $lib_path;
+}
+else
+{
+    _verbose("'${lib}' is not a git command. See 'kohm help'.");
+}
+echo "\n";
