@@ -38,13 +38,17 @@ define('TMP_PATH', !empty($config['tmp']['path']) ? $config['tmp']['path']: $roo
 
 if (!is_dir(APP_PATH))
 {
-    _verbose("Failed to locate `apps` folder.\nManually configure by using 'kohm config app <APPS_DIRECTORY>'.");
+    _verbose("Failed to locate `apps` folder.\n\n"
+             . "run `mkdir -p " . APP_PATH . "`\n"
+             . "or manually configure by using 'kohm config app <APPS_DIRECTORY>'.");
     exit("\n");
 }
 
 if (!is_dir(TMP_PATH))
 {
-    _verbose("Failed to locate `tmp` folder.\nManually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
+    _verbose("Failed to locate `tmp` folder.\n\n"
+             . "run `mkdir -p " . TMP_PATH . "`\n"
+             . "or manually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
     exit("\n");
 }
 
