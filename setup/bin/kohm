@@ -63,6 +63,6 @@ if (file_exists($lib_path))
 }
 else
 {
-    _verbose("'${lib}' is not a git command. See 'kohm help'.");
+    _verbose("'${lib}' is not a kohm command. See 'kohm help'.");
 }
 echo "\n";
