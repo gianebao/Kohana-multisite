@@ -51,7 +51,8 @@ else
 		If any of the tests have failed, consult the <a href="http://kohanaframework.org/guide/about.install">documentation</a>
 		for more information on how to correct the problem.
 	</p>
-
+    
+    <p><strong>General</strong> | <a href="/layout">Layout</a></p>
 	<?php $failed = FALSE ?>
 
 	<table cellspacing="0">
