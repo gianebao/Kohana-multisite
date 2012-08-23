@@ -123,7 +123,7 @@ class Layout_Core
 	 * @return  mixed
 	 * @throws  Kohana_Exception
 	 */
-    public function & __get($name)
+    public function __get($name)
     {
         $name = strtolower($name);
         
