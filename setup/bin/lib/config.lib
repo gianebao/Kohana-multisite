@@ -34,16 +34,6 @@ function safefilerewrite($fileName, $dataToSave)
 
 }
 
-if (file_exists(CONFIG))
-{
-    $config = parse_ini_file(CONFIG);
-}
-
-if (empty($config))
-{
-    $config = array();
-}
-
 if (empty($ARGS[2]))
 {
     _verbose("You must specify a configuration name.\n");

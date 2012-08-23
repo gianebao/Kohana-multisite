@@ -18,7 +18,7 @@ if (file_exists(CONFIG))
 {
     try
     {
-        $config = parse_ini_file(CONFIG);
+        $config = parse_ini_file(CONFIG, true);
     }
     catch (Exception $e)
     {
