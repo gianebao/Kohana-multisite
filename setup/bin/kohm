@@ -49,7 +49,7 @@ if (file_exists($lib_path))
         {
             _verbose("Failed to locate `apps` folder.\n\n"
                      . "run `mkdir -p " . APP_PATH . "`\n"
-                     . "or manually configure by using 'kohm config app <APPS_DIRECTORY>'.");
+                     . "or manually configure by using 'kohm config apps.path <APPS_DIRECTORY>'.");
             exit("\n");
         }
         
@@ -57,7 +57,7 @@ if (file_exists($lib_path))
         {
             _verbose("Failed to locate `tmp` folder.\n\n"
                      . "run `mkdir -p " . TMP_PATH . "`\n"
-                     . "or manually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
+                     . "or manually configure by using 'kohm config tmp.path <TMP_DIRECTORY>'.");
             exit("\n");
         }
     }

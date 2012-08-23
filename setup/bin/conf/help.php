@@ -3,7 +3,7 @@ $GLOBALS['helps'] = array(
 
     'config' => "= Kohm Configure = \n"
         . "\tdefinition: Add or modify a configuration value.\n"
-        . "\tusage: kohm config <name> <value>\n",
+        . "\tusage: kohm config <name.subcontext> <value>\n",
 
     'create' => "= Kohm Create = \n"
         . "\tdefinition: Creates a new application.\n"
