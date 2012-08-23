@@ -1,5 +1,7 @@
 tmp/*
 
+setup/bin/conf/kohm.ini
+
 .htaccess
 webroot/.htaccess
 
