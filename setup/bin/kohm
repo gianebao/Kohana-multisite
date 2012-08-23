@@ -33,25 +33,6 @@ if (empty($config))
 
 $root = dirname(SETUP_PATH);
 
-define('APP_PATH', !empty($config['apps']['path']) ? $config['apps']['path']: $root . DS . 'apps');
-define('TMP_PATH', !empty($config['tmp']['path']) ? $config['tmp']['path']: $root . DS . 'tmp');
-
-if (!is_dir(APP_PATH))
-{
-    _verbose("Failed to locate `apps` folder.\n\n"
-             . "run `mkdir -p " . APP_PATH . "`\n"
-             . "or manually configure by using 'kohm config app <APPS_DIRECTORY>'.");
-    exit("\n");
-}
-
-if (!is_dir(TMP_PATH))
-{
-    _verbose("Failed to locate `tmp` folder.\n\n"
-             . "run `mkdir -p " . TMP_PATH . "`\n"
-             . "or manually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
-    exit("\n");
-}
-
 $ARGS = $argv;
 
 $lib = empty($ARGS) || empty($ARGS[1])? 'help': strtolower($ARGS[1]);
@@ -59,6 +40,28 @@ $lib_path = LIB_PATH . DS . $lib . '.lib';
 
 if (file_exists($lib_path))
 {
+    if ('config' !== $lib)
+    {
+        define('APP_PATH', !empty($config['apps']['path']) ? $config['apps']['path']: $root . DS . 'apps');
+        define('TMP_PATH', !empty($config['tmp']['path']) ? $config['tmp']['path']: $root . DS . 'tmp');
+        
+        if (!is_dir(APP_PATH))
+        {
+            _verbose("Failed to locate `apps` folder.\n\n"
+                     . "run `mkdir -p " . APP_PATH . "`\n"
+                     . "or manually configure by using 'kohm config app <APPS_DIRECTORY>'.");
+            exit("\n");
+        }
+        
+        if (!is_dir(TMP_PATH))
+        {
+            _verbose("Failed to locate `tmp` folder.\n\n"
+                     . "run `mkdir -p " . TMP_PATH . "`\n"
+                     . "or manually configure by using 'kohm config tmp <TMP_DIRECTORY>'.");
+            exit("\n");
+        }
+    }
+    
     include $lib_path;
 }
 else
