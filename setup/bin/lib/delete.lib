@@ -47,7 +47,14 @@ if (!is_dir($destination_path))
 
 function rm_dir($dir)
 {
-    foreach(glob($dir . '/*') as $file)
+    $glob = glob($dir . '/*');
+    
+    if (!is_array($glob))
+    {
+        return false;
+    }
+    
+    foreach($glob as $file)
     {
         if(is_dir($file))
         {
