@@ -9,7 +9,10 @@
  * Updated: Application depends on the domain name/server_name.
  */
 
-define('SERVER_NAME', $_SERVER['SERVER_NAME']);
+if (!defined('SERVER_NAME'))
+{
+    define('SERVER_NAME', $_SERVER['SERVER_NAME']);
+}
 $application = '../apps/' . SERVER_NAME;
 
 /**
@@ -124,7 +127,10 @@ require APPPATH.'bootstrap'.EXT;
  * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
  * If no source is specified, the URI will be automatically detected.
  */
-echo Request::factory()
+if (!defined('SUPPRESS_OUTPUT'))
+{
+    echo Request::factory()
 	->execute()
 	->send_headers()
 	->body();
+}
