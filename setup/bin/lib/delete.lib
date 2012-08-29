@@ -49,6 +49,14 @@ function rm_dir($dir)
 {
     $glob = glob($dir . '/*');
     
+    $tglob = glob($dir . '/.*');
+    if (is_array($tglob))
+    {
+        $glob = (is_array($glob)) ? array_merge($glob, $tglob): $tglob;
+    }
+    
+    $glob = array_merge(array_unique($glob));
+    
     if (!is_array($glob))
     {
         return is_dir($dir) ? rmdir($dir): false;
@@ -56,6 +64,11 @@ function rm_dir($dir)
     
     foreach($glob as $file)
     {
+        if (preg_match('/\\.{1,2}$/', $file))
+        {
+            continue;
+        }
+        
         if(is_dir($file))
         {
             rm_dir($file);
