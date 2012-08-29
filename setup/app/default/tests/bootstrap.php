@@ -1,4 +1,12 @@
 <?php
+/**
+ * Bootstrap for phpunit testing.
+ * Add server variables (like MSISDN, etc) to simulate transactions.
+ **/
 define('SUPPRESS_OUTPUT', 'SUPPRESS_OUTPUT');
-$_SERVER['SERVER_NAME'] = 'multi.kohana.com';
-require '../../../webroot/index.php';
+
+if (empty($_SERVER['SERVER_NAME']))
+{
+    $path = pathinfo(dirname(__DIR__));
+    $_SERVER['SERVER_NAME'] = $path['basename'];
+}
